@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.elife</groupId>
+    <artifactId>ticketmanager</artifactId>
     <version>3.8.2</version>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <name>TicketManager</name>
+    <description>易生活客户服务系统</description>
     
     <properties>
-        <ruoyi.version>3.8.2</ruoyi.version>
+        <ticketmanager.version>3.8.2</ticketmanager.version>
+        <module.version>4.0.0</module.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -166,49 +166,57 @@
 
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.elife</groupId>
+                <artifactId>elife-quartz</artifactId>
+                <version>${ticketmanager.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.elife</groupId>
+                <artifactId>elife-generator</artifactId>
+                <version>${ticketmanager.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.elife</groupId>
+                <artifactId>elife-framework</artifactId>
+                <version>${ticketmanager.version}</version>
+            </dependency>
+
+            <!-- 业务模块-->
+            <dependency>
+                <groupId>com.elife</groupId>
+                <artifactId>elife-feature</artifactId>
+                <version>${ticketmanager.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.elife</groupId>
+                <artifactId>elife-system</artifactId>
+                <version>${ticketmanager.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.elife</groupId>
+                <artifactId>elife-common</artifactId>
+                <version>${ticketmanager.version}</version>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
+        <module>elife-admin</module>
+        <module>elife-framework</module>
+        <module>elife-system</module>
+        <module>elife-quartz</module>
+        <module>elife-generator</module>
+        <module>elife-common</module>
+        <module>elife-feature</module>
     </modules>
     <packaging>pom</packaging>
 

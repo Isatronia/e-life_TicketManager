@@ -1,0 +1,10 @@
+Application Version: ${ticket-manager.version}
+Spring Boot Version: ${spring-boot.version}
+                    ┏━━━━━━━━━━━━━━━━┓
+                    ┃      遗书       ┃
+                    ┃     <se.1>     ┃
+                    ┃                ┃
+                    ┃  spring又崩了!  ┃
+                    ┃    快跑 有bu    ┃
+                    ┗━━━━━━━━━━━━━━━━┛
+                     \ (´;ω;｀) ﾉ +崩溃

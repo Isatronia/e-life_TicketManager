@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elife.feature.mapper.SubscribeMapper">
+
+    <resultMap type="Subscribe" id="SubscribeResult">
+        <result property="userId"         column="user_id"       />
+        <result property="companyId"      column="company_id"    />
+        <result property="companyName"    column="company_name"  />
+        <result property="userName"       column="user_name"     />
+
+    </resultMap>
+
+    <sql id="selectSubscribeVo">
+        SELECT s.user_id, s.company_id, u.user_name, c.company_name FROM ( fea_user_company AS s LEFT JOIN sys_user AS u ON s.user_id = u.user_id ) LEFT JOIN fea_company AS c ON c.company_id = s.company_id
+    </sql>
+
+    <select id="selectSubscribeList" parameterType="Subscribe" resultMap="SubscribeResult">
+        <include refid="selectSubscribeVo"/>
+    </select>
+
+    <select id="selectSubscribeByUserId" parameterType="Long" resultMap="SubscribeResult">
+        SELECT
+        s.user_id, s.company_id, u.user_name, c.company_name
+        FROM (
+            fea_user_company AS s
+            LEFT JOIN sys_user AS u ON s.user_id = u.user_id
+        )
+        LEFT JOIN fea_company AS c ON c.company_id = s.company_id
+        WHERE s.user_id = #{userId}
+    </select>
+
+    <insert id="insertSubscribe" parameterType="Subscribe">
+        insert into fea_user_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null and companyId != null">user_id, company_id</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null and companyId != null">#{userId}, #{companyId}</if>
+        </trim>
+    </insert>
+
+    <delete id="unsubscribe" parameterType="Subscribe">
+        delete from fea_user_company where user_id = #{userId} and company_id = #{company_id}
+    </delete>
+
+<!--    <update id="updateSubscribe" parameterType="Subscribe">-->
+<!--        update fea_user_company-->
+<!--        <trim prefix="SET" suffixOverrides=",">-->
+<!--            <if test="companyId != null">company_id = #{companyId},</if>-->
+<!--        </trim>-->
+<!--        where user_id = #{userId}-->
+<!--    </update>-->
+
+
+<!--    <delete id="deleteSubscribeByUserId" parameterType="Long">-->
+<!--        delete from fea_user_company where user_id = #{userId}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteSubscribeByUserIds" parameterType="String">-->
+<!--        delete from fea_user_company where user_id in-->
+<!--        <foreach item="userId" collection="array" open="(" separator="," close=")">-->
+<!--            #{userId}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteCompanyByCompanyIds" parameterType="String">-->
+<!--        delete from fea_company where company_id in-->
+<!--        <foreach item="companyId" collection="array" open="(" separator="," close=")">-->
+<!--            #{companyId}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteCompanyByCompanyId" parameterType="Long">-->
+<!--        delete from fea_company where company_id = #{companyId}-->
+<!--    </delete>-->
+
+<!--    <insert id="batchCompany">-->
+<!--        insert into fea_company( company_id, company_name, company_address, email, found_time, certificate, additional_info, apply_date, company_master, create_by, create_time, update_by, update_time) values-->
+<!--        <foreach item="item" index="index" collection="list" separator=",">-->
+<!--            ( #{item.companyId}, #{item.companyName}, #{item.companyAddress}, #{item.email}, #{item.foundTime}, #{item.certificate}, #{item.additionalInfo}, #{item.applyDate}, #{item.companyMaster}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime})-->
+<!--        </foreach>-->
+<!--    </insert>-->
+</mapper>
