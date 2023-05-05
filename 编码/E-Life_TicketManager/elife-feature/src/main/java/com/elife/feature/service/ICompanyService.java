@@ -61,4 +61,12 @@ public interface ICompanyService
     public int deleteCompanyByCompanyId(Long companyId);
 
 
+    /**
+     * 删除公司管理信息
+     *
+     * @param companyId 公司管理主键
+     * @return 结果
+     */
+    public int companySettlement(Long companyId);
+
 }

@@ -50,4 +50,20 @@ public interface ISubscribeService
      * @return 结果
      */
     public int deleteSubscribeByUserId(Subscribe subscribe);
+
+    /**
+     * 更新订阅信息状态
+     *
+     * @param subscribe 订阅信息
+     * @return 结果
+     */
+    public int updateSubscribeStatus(Subscribe subscribe);
+
+    /**
+     * 强制取消订阅
+     *
+     * @param subscribe 订阅信息
+     * @return 结果
+     */
+    public int forceUnsubscribe(Subscribe subscribe);
 }

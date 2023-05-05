@@ -134,7 +134,9 @@ public class SysUserController extends BaseController {
         Map<String, String> res = new HashMap<String, String>();
 
         // 返回的数据
-        res.put("userName", sysUser.getUserName());
+//        res.put("userName", sysUser.getUserName());
+        res.put("userId", sysUser.getUserId().toString());
+        res.put("nickName", sysUser.getNickName());
         res.put("avatar", sysUser.getAvatar());
 
         // 开始构造返回结构

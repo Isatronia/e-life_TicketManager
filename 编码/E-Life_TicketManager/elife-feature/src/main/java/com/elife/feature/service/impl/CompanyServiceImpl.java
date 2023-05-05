@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.elife.feature.mapper.CompanyMapper;
 import com.elife.feature.domain.Company;
 import com.elife.feature.service.ICompanyService;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.elife.common.utils.SecurityUtils.getLoginUser;
 
@@ -102,6 +103,13 @@ public class CompanyServiceImpl implements ICompanyService
     public int deleteCompanyByCompanyId(Long companyId)
     {
         return companyMapper.deleteCompanyByCompanyId(companyId);
+    }
+
+    @Override
+    @Transactional
+    public int companySettlement(Long companyId) {
+
+        return 0;
     }
 
 }

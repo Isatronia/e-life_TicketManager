@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elife.common.mapper.MessageMapper">
+    
+    <resultMap type="Message" id="MessageResult">
+        <result property="messageId"        column="message_id"    />
+        <result property="messageType"      column="message_type"    />
+        <result property="messageTicket"    column="message_ticket"    />
+        <result property="author"           column="author"    />
+        <result property="quote"            column="quote"    />
+        <result property="mention"          column="mention"    />
+        <result property="status"           column="status"    />
+        <result property="createBy"         column="create_by"    />
+        <result property="createTime"       column="create_time"    />
+        <result property="updateBy"         column="update_by"    />
+        <result property="updateTime"       column="update_time"    />
+        <result property="content"          column="content"    />
+    </resultMap>
+
+    <sql id="selectMessageVo">
+        select message_id, message_type, message_ticket, author, quote, mention, status, create_by, create_time, update_by, update_time, content from fea_message
+    </sql>
+
+    <select id="selectMessageList" parameterType="Message" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        <where>  
+            <if test="messageType != null "> and message_type = #{messageType}</if>
+            <if test="messageTicket != null "> and message_ticket = #{messageTicket}</if>
+            <if test="quote != null "> and quote = #{quote}</if>
+            <if test="mention != null  and mention != ''"> and mention = #{mention}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectMessageByMessageId" parameterType="Long" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        where message_id = #{messageId}
+    </select>
+        
+    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="messageId">
+        insert into fea_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="messageType != null">message_type,</if>
+            <if test="messageTicket != null">message_ticket,</if>
+            <if test="author != null">author,</if>
+            <if test="quote != null">quote,</if>
+            <if test="mention != null">mention,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="messageType != null">#{messageType},</if>
+            <if test="messageTicket != null">#{messageTicket},</if>
+            <if test="author != null">#{author},</if>
+            <if test="quote != null">#{quote},</if>
+            <if test="mention != null">#{mention},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMessage" parameterType="Message">
+        update fea_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="messageType != null">message_type = #{messageType},</if>
+            <if test="messageTicket != null">message_ticket = #{messageTicket},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="quote != null">quote = #{quote},</if>
+            <if test="mention != null">mention = #{mention},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where message_id = #{messageId}
+    </update>
+
+    <delete id="deleteMessageByMessageId" parameterType="Long">
+        delete from fea_message where message_id = #{messageId}
+    </delete>
+
+    <delete id="deleteMessageByMessageIds" parameterType="String">
+        delete from fea_message where message_id in 
+        <foreach item="messageId" collection="array" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </delete>
+</mapper>

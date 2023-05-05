@@ -31,18 +31,17 @@ import com.elife.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/feature/subscribe")
-public class SubscribeController extends BaseController
-{
+public class SubscribeController extends BaseController {
     @Autowired
     private ISubscribeService subscribeService;
+    private AjaxResult success;
 
     /**
      * 查询订阅列表
      */
     @PreAuthorize("@ss.hasPermi('feature:company:detail')")
     @GetMapping("/list")
-    public TableDataInfo list(@RequestBody(required = false) Subscribe subscribe)
-    {
+    public TableDataInfo list(@RequestBody(required = false) Subscribe subscribe) {
         startPage();
         List<Subscribe> list = subscribeService.selectSubscribeList(subscribe);
         return getDataTable(list);
@@ -64,21 +63,30 @@ public class SubscribeController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:subscribe:add')")
     @Log(title = "订阅", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Subscribe subscribe)
-    {
+    public AjaxResult add(@RequestBody Subscribe subscribe) {
         return toAjax(subscribeService.insertSubscribe(subscribe));
     }
 
-//    /**
-//     * 修改订阅
-//     */
-//    @PreAuthorize("@ss.hasPermi('feature:subscribe:edit')")
-//    @Log(title = "订阅", businessType = BusinessType.UPDATE)
-//    @PutMapping
-//    public AjaxResult edit(@RequestBody Subscribe subscribe)
-//    {
-//        return toAjax(subscribeService.updateSubscribe(subscribe));
-//    }
+    /**
+     * 修改订阅状态
+     */
+    @PreAuthorize("@ss.hasPermi('feature:subscribe:edit')")
+    @Log(title = "订阅", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody Subscribe subscribe) {
+        return toAjax(subscribeService.updateSubscribeStatus(subscribe));
+    }
+
+    /**
+     * 删除订阅状态
+     */
+    @PreAuthorize("@ss.hasPermi('feature:subscribe:edit')")
+    @Log(title = "订阅", businessType = BusinessType.DELETE)
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody Subscribe subscribe) {
+        return success;
+//        return toAjax(subscribeService.(subscribe));
+    }
 
 //    /**
 //     * 删除订阅
@@ -94,14 +102,14 @@ public class SubscribeController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:subscribe:unsubscribe')")
     @Log(title = "取消订阅", businessType = BusinessType.DELETE)
     @DeleteMapping("/unsubscribe/{companyId}")
-    public AjaxResult unsubscribe(@PathVariable Long companyId){
+    public AjaxResult unsubscribe(@PathVariable Long companyId) {
         return toAjax(subscribeService.unsubscribeByCompanyId(companyId));
     }
 
     @PreAuthorize("@ss.hasPermi('feature:subscribe:subscribe')")
-    @Log(title="公司订阅", businessType = BusinessType.INSERT)
+    @Log(title = "公司订阅", businessType = BusinessType.INSERT)
     @PostMapping("/subscribe/{companyId}")
-    public AjaxResult subscribe(@PathVariable Long companyId){
+    public AjaxResult subscribe(@PathVariable Long companyId) {
         return toAjax(subscribeService.subscribeByCompanyId(companyId));
     }
 }

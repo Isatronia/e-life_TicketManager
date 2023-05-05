@@ -19,6 +19,15 @@ public interface ISysUserService
     public List<SysUser> selectUserList(SysUser user);
 
     /**
+     * 根据公司查询用户列表
+     *
+     * @param companyId 公司Id
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserByCompany(Long ompanyId);
+
+
+    /**
      * 根据条件分页查询已分配用户角色列表
      * 
      * @param user 用户信息

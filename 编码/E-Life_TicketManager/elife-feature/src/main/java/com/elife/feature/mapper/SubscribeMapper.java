@@ -45,13 +45,13 @@ public interface SubscribeMapper
      */
     public int unsubscribe(Subscribe subscribe);
 
-//    /**
-//     * 修改订阅
-//     *
-//     * @param subscribe 订阅
-//     * @return 结果
-//     */
-//    public int updateSubscribe(Subscribe subscribe);
+    /**
+     * 修改订阅
+     *
+     * @param subscribe 订阅
+     * @return 结果
+     */
+    public int updateSubscribe(Subscribe subscribe);
 //
 //    /**
 //     * 删除订阅

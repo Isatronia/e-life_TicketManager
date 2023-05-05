@@ -81,11 +81,11 @@ public class MessageController extends BaseController {
      * 根据用户获取私信（通知）列表
      */
     @PreAuthorize("@ss.hasPermi('feature:ticket:list')")
-    @GetMapping(value = "/dm/{ticketId}")
-    public TableDataInfo getDirectMessage(@PathVariable(value = "userId", required = false) Long userId) {
+    @GetMapping(value = "/dm/{userId}")
+    public TableDataInfo getDirectMessage(@PathVariable(value = "userId") Long userId) {
+        if (-1 == userId) userId = getLoginUser().getUserId();
         startPage();
-        if (userId == null) userId = getLoginUser().getUserId();
-        List<Message> list = messageService.selectMessageListByTicketId(userId);
+        List<Message> list = messageService.selectDirectMessage(userId);
         return getDataTable(list);
     }
 

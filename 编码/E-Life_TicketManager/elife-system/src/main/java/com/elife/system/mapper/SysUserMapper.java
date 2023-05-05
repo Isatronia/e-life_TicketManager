@@ -36,6 +36,14 @@ public interface SysUserMapper
     public List<SysUser> selectUnallocatedList(SysUser user);
 
     /**
+     * 根据公司查询用户列表
+     *
+     * @param companyId 公司Id
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserByCompany(Long companyId);
+
+    /**
      * 通过用户名查询用户
      * 
      * @param userName 用户名

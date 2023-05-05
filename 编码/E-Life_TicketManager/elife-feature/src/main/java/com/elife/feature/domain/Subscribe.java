@@ -1,6 +1,7 @@
 package com.elife.feature.domain;
 
 import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.elife.common.annotation.Excel;
@@ -12,21 +13,34 @@ import com.elife.common.core.domain.BaseEntity;
  * @author Ishgrina
  * @date 2023-04-20
  */
-public class Subscribe extends BaseEntity
-{
+public class Subscribe extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 用户ID */
+    /**
+     * 用户ID
+     */
     private Long userId;
 
-    /** 公司ID */
+    /**
+     * 公司ID
+     */
     private Long companyId;
 
-    /** 公司名 */
+    /**
+     * 状态
+     */
+    private int status;
+
+    /**
+     * 公司名
+     */
     private String companyName;
 
-    /** 用户名 */
+    /**
+     * 用户名
+     */
     private String userName;
+
 
     public Subscribe(Long userId, Long companyId) {
         super();
@@ -34,25 +48,25 @@ public class Subscribe extends BaseEntity
         this.companyId = companyId;
     }
 
-    public void setUserId(Long userId)
-    {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Long getUserId()
-    {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setCompanyId(Long companyId)
-    {
+    public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
 
-    public Long getCompanyId()
-    {
+    public Long getCompanyId() {
         return companyId;
     }
+
+    public int getStatus() { return status; }
+
+    public void setStatus(int status) { this.status = status; }
 
     public String getCompanyName() {
         return companyName;
@@ -72,9 +86,10 @@ public class Subscribe extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("userId", getUserId())
                 .append("companyId", getCompanyId())
+                .append("status", getStatus())
                 .append("userName", getUserName())
                 .append("companyName", getCompanyName())
                 .toString();

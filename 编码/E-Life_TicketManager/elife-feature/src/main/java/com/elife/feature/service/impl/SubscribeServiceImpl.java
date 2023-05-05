@@ -62,6 +62,7 @@ public class SubscribeServiceImpl implements ISubscribeService
     @Override
     public int insertSubscribe(Subscribe subscribe)
     {
+
         return subscribeMapper.insertSubscribe(subscribe);
     }
 
@@ -75,5 +76,29 @@ public class SubscribeServiceImpl implements ISubscribeService
     public int deleteSubscribeByUserId(Subscribe subscribe)
     {
         return subscribeMapper.unsubscribe(subscribe);
+    }
+
+    /**
+     * 更新订阅信息状态
+     *
+     * @param subscribe 订阅信息
+     * @return 结果
+     */
+    @Override
+    public int updateSubscribeStatus(Subscribe subscribe) {
+        if(null == subscribe.getCompanyId() || null == subscribe.getUserId())
+            return 0;
+        return subscribeMapper.updateSubscribe(subscribe);
+    }
+
+    /**
+     * 强制取消订阅
+     *
+     * @param subscribe 订阅信息
+     * @return
+     */
+    @Override
+    public int forceUnsubscribe(Subscribe subscribe) {
+        return 0;
     }
 }
