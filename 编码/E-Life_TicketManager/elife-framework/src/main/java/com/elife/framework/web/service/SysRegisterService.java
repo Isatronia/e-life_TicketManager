@@ -1,5 +1,8 @@
 package com.elife.framework.web.service;
 
+import com.elife.system.domain.SysUserPost;
+import com.elife.system.domain.SysUserRole;
+import com.elife.system.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.elife.common.constant.Constants;
@@ -17,6 +20,9 @@ import com.elife.framework.manager.factory.AsyncFactory;
 import com.elife.system.service.ISysConfigService;
 import com.elife.system.service.ISysUserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 注册校验方法
  * 
@@ -33,6 +39,9 @@ public class SysRegisterService
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
 
     /**
      * 注册
@@ -76,6 +85,7 @@ public class SysRegisterService
             sysUser.setUserName(username);
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(registerBody.getPassword()));
+            setInitializeRoleAndDept(sysUser);
             boolean regFlag = userService.registerUser(sysUser);
             if (!regFlag)
             {
@@ -111,5 +121,20 @@ public class SysRegisterService
         {
             throw new CaptchaException();
         }
+    }
+
+    private void setInitializeRoleAndDept(SysUser sysUser){
+        String initRole = configService.selectConfigByKey("sys.register.initRole");
+//        if (StringUtils.isNotNull(initRole))
+//        {
+//            List<Long> roleIds = new ArrayList<Long>();
+//           for(String id: initRole.split(",")){
+//               roleIds.add(Long.parseLong(id));
+//           }
+//           userService.insertUserRole(sysUser.getUserId(), roleIds.toArray(new Long[roleIds.size()]));
+//        }
+
+        String initDept = configService.selectConfigByKey("sys.register.initDept");
+        return;
     }
 }

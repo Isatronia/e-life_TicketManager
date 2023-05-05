@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elife.ticket.mapper.TicketMapper">
+    
+    <resultMap type="Ticket" id="TicketResult">
+        <result property="ticketId"             column="ticket_id"    />
+        <result property="parentId"             column="parent_id"    />
+        <result property="ancestors"            column="ancestors"    />
+        <result property="userId"               column="user_id"    />
+        <result property="deptId"               column="dept_id"    />
+        <result property="ticketTitle"          column="ticket_title"    />
+        <result property="ticketType"           column="ticket_type"    />
+        <result property="status"               column="status"    />
+        <result property="authorizationInfo"    column="authorization_info"    />
+        <result property="commitInfo"           column="commit_info"    />
+        <result property="createBy"             column="create_by"    />
+        <result property="createTime"           column="create_time"    />
+        <result property="updateBy"             column="update_by"    />
+        <result property="updateTime"           column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTicketVo">
+        select ticket_id, parent_id, ancestors, user_id, dept_id, ticket_title, ticket_type, status, authorization_info, commit_info, create_by, create_time, update_by, update_time from fea_ticket
+    </sql>
+
+    <select id="selectTicketList" parameterType="Ticket" resultMap="TicketResult">
+        <include refid="selectTicketVo"/>
+        <where>  
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="ticketTitle != null  and ticketTitle != ''"> and ticket_title like concat('%', #{ticketTitle}, '%')</if>
+            <if test="ticketType != null "> and ticket_type = #{ticketType}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="authorizationInfo != null  and authorizationInfo != ''"> and authorization_info = #{authorizationInfo}</if>
+            <if test="commitInfo != null "> and commit_info = #{commitInfo}</if>
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectTicketByTicketId" parameterType="Long" resultMap="TicketResult">
+        <include refid="selectTicketVo"/>
+        WHERE ticket_id = #{ticketId}
+    </select>
+
+    <select id="selectTicketCountByUserAndCompany" parameterType="Ticket" resultType="java.lang.Long">
+        SELECT COUNT(company_id) as cnt FROM fea_ticket WHERE company_id = #{companyId} and user_id = #{userId}
+    </select>
+
+    <select id="selectUserTicket" parameterType="Ticket" resultMap="TicketResult">
+        <if test="userId != null and deptId != null">
+            <include refid="selectTicketVo"/>
+            WHERE user_id = #{userId} OR dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = #{deptId} or find_in_set( #{deptId} , ancestors ) )
+        </if>
+
+    </select>
+
+    <select id="selectLastInsertId" resultType="Long">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <insert id="insertTicket" parameterType="Ticket" useGeneratedKeys="true" keyProperty="ticketId">
+        insert into fea_ticket
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="ticketTitle != null and ticketTitle != ''">ticket_title,</if>
+            <if test="ticketType != null">ticket_type,</if>
+            <if test="status != null">status,</if>
+            <if test="authorizationInfo != null">authorization_info,</if>
+            <if test="commitInfo != null">commit_info,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="ticketTitle != null and ticketTitle != ''">#{ticketTitle},</if>
+            <if test="ticketType != null">#{ticketType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="authorizationInfo != null">#{authorizationInfo},</if>
+            <if test="commitInfo != null">#{commitInfo},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTicket" parameterType="Ticket">
+        update fea_ticket
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="ticketTitle != null and ticketTitle != ''">ticket_title = #{ticketTitle},</if>
+            <if test="ticketType != null">ticket_type = #{ticketType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="authorizationInfo != null">authorization_info = #{authorizationInfo},</if>
+            <if test="commitInfo != null">commit_info = #{commitInfo},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where ticket_id = #{ticketId}
+    </update>
+
+    <delete id="deleteTicketByTicketId" parameterType="Long">
+        delete from fea_ticket where ticket_id = #{ticketId}
+    </delete>
+
+    <delete id="deleteTicketByTicketIds" parameterType="String">
+        delete from fea_ticket where ticket_id in 
+        <foreach item="ticketId" collection="array" open="(" separator="," close=")">
+            #{ticketId}
+        </foreach>
+    </delete>
+</mapper>

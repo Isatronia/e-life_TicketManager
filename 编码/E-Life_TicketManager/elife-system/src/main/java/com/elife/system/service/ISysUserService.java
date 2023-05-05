@@ -203,4 +203,13 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+
+    /**
+     * 新增用户角色信息
+     *
+     * @param userId 用户ID
+     * @param roleIds 角色组
+     */
+    public void insertUserRole(Long userId, Long[] roleIds);
 }

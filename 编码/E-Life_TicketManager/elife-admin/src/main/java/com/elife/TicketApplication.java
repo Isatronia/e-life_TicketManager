@@ -7,16 +7,16 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 /**
  * 启动程序
  * 
- * @author ruoyi
+ * @author Ishgrina
  */
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class }, scanBasePackages = {"com.elife"})
-public class RuoYiApplication
+public class TicketApplication
 {
     public static void main(String[] args)
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
-        SpringApplication.run(RuoYiApplication.class, args);
+        SpringApplication.run(TicketApplication.class, args);
         System.out.println(
                 " ┏━━━━━━━━━━━━━━━━┓\n" +
                 " ┃   系统起动成功   ┃\n" +

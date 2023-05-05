@@ -107,11 +107,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/**/*.js",
                         "/profile/**"
                 ).permitAll()
+                .antMatchers("/system/user/info").permitAll()
+                // 可以匿名访问
                 .antMatchers("/swagger-ui.html").anonymous()
                 .antMatchers("/swagger-resources/**").anonymous()
                 .antMatchers("/webjars/**").anonymous()
                 .antMatchers("/*/api-docs").anonymous()
                 .antMatchers("/druid/**").anonymous()
+//                .antMatchers("/system/user/info").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

@@ -13,16 +13,27 @@
     </resultMap>
 
     <sql id="selectSubscribeVo">
-        SELECT s.user_id, s.company_id, u.user_name, c.company_name FROM ( fea_user_company AS s LEFT JOIN sys_user AS u ON s.user_id = u.user_id ) LEFT JOIN fea_company AS c ON c.company_id = s.company_id
+        SELECT
+            s.user_id, s.company_id, u.user_name, c.company_name
+        FROM (
+            fea_user_company AS s LEFT JOIN sys_user AS u ON s.user_id = u.user_id
+        )
+        LEFT JOIN
+            fea_company AS c ON c.company_id = s.company_id
     </sql>
 
     <select id="selectSubscribeList" parameterType="Subscribe" resultMap="SubscribeResult">
         <include refid="selectSubscribeVo"/>
+        <where>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>
+            and 1=1
+        </where>
     </select>
 
     <select id="selectSubscribeByUserId" parameterType="Long" resultMap="SubscribeResult">
         SELECT
-        s.user_id, s.company_id, u.user_name, c.company_name
+            s.user_id, s.company_id, u.user_name, c.company_name
         FROM (
             fea_user_company AS s
             LEFT JOIN sys_user AS u ON s.user_id = u.user_id
@@ -31,18 +42,37 @@
         WHERE s.user_id = #{userId}
     </select>
 
+<!--    <select id="selectSubscribeBySubscribeInfo" parameterType="Long" resultMap="SubscribeResult">-->
+<!--        SELECT-->
+<!--        s.user_id, s.company_id, u.user_name, c.company_name-->
+<!--        FROM (-->
+<!--        fea_user_company AS s-->
+<!--        LEFT JOIN sys_user AS u ON s.user_id = u.user_id-->
+<!--        )-->
+<!--        LEFT JOIN fea_company AS c ON c.company_id = s.company_id-->
+<!--        <where>-->
+<!--            <if test="userId != null and userId != ''">and user_id = #{userId}</if>-->
+<!--            <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>-->
+<!--            and 1=1-->
+<!--        </where>-->
+<!--    </select>-->
+
     <insert id="insertSubscribe" parameterType="Subscribe">
-        insert into fea_user_company
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null and companyId != null">user_id, company_id</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null and companyId != null">#{userId}, #{companyId}</if>
-        </trim>
+        <if test="userId != null and companyId != null">
+            insert into fea_user_company
+
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                user_id, company_id
+            </trim>
+
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                #{userId}, #{companyId}
+            </trim>
+        </if>
     </insert>
 
     <delete id="unsubscribe" parameterType="Subscribe">
-        delete from fea_user_company where user_id = #{userId} and company_id = #{company_id}
+        <if test="userId != null and companyId != null"> delete from fea_user_company where user_id = #{userId} and company_id = #{companyId}</if>
     </delete>
 
 <!--    <update id="updateSubscribe" parameterType="Subscribe">-->

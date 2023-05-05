@@ -115,4 +115,11 @@ public interface SysDeptMapper
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+
+    /**
+     * 获取上一个插入的部门管理信息
+     *
+     * @return 结果
+     */
+    public Long selectLastInsertId();
 }

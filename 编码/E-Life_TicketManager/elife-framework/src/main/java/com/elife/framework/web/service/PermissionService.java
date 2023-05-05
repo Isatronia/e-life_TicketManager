@@ -160,6 +160,8 @@ public class PermissionService
      */
     private boolean hasPermissions(Set<String> permissions, String permission)
     {
+        System.out.println("[DEBUG] Login User Permission set is :　" + permissions.toString());
+        System.out.println("[DEBUG] Required permission is: " + permission);
         return permissions.contains(ALL_PERMISSION) || permissions.contains(StringUtils.trim(permission));
     }
 }

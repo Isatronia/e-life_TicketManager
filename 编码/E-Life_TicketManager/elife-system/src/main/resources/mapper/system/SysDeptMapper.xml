@@ -84,7 +84,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    <include refid="selectDeptVo"/>
 		where dept_name=#{deptName} and parent_id = #{parentId} limit 1
 	</select>
-    
+
+	<select id="selectLastInsertId" resultType="Long">
+		SELECT LAST_INSERT_ID()
+	</select>
+
     <insert id="insertDept" parameterType="SysDept">
  		insert into sys_dept(
  			<if test="deptId != null and deptId != 0">dept_id,</if>

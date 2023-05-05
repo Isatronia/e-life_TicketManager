@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elife.ticket.mapper.ComplaintMapper">
+    
+    <resultMap type="Complaint" id="ComplaintResult">
+        <result property="complaintId"    column="complaint_id"    />
+        <result property="complaintUser"    column="complaint_user"    />
+        <result property="complaintTarget"    column="complaint_target"    />
+        <result property="content"    column="content"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectComplaintVo">
+        select complaint_id, complaint_user, complaint_target, content, create_by, create_time, update_by, update_time from fea_complaint
+    </sql>
+
+    <select id="selectComplaintList" parameterType="Complaint" resultMap="ComplaintResult">
+        <include refid="selectComplaintVo"/>
+        <where>  
+            <if test="complaintUser != null "> and complaint_user = #{complaintUser}</if>
+            <if test="complaintTarget != null "> and complaint_target = #{complaintTarget}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectComplaintByComplaintId" parameterType="Long" resultMap="ComplaintResult">
+        <include refid="selectComplaintVo"/>
+        where complaint_id = #{complaintId}
+    </select>
+        
+    <insert id="insertComplaint" parameterType="Complaint" useGeneratedKeys="true" keyProperty="complaintId">
+        insert into fea_complaint
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="complaintUser != null">complaint_user,</if>
+            <if test="complaintTarget != null">complaint_target,</if>
+            <if test="content != null">content,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="complaintUser != null">#{complaintUser},</if>
+            <if test="complaintTarget != null">#{complaintTarget},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComplaint" parameterType="Complaint">
+        update fea_complaint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="complaintUser != null">complaint_user = #{complaintUser},</if>
+            <if test="complaintTarget != null">complaint_target = #{complaintTarget},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where complaint_id = #{complaintId}
+    </update>
+
+    <delete id="deleteComplaintByComplaintId" parameterType="Long">
+        delete from fea_complaint where complaint_id = #{complaintId}
+    </delete>
+
+    <delete id="deleteComplaintByComplaintIds" parameterType="String">
+        delete from fea_complaint where complaint_id in 
+        <foreach item="complaintId" collection="array" open="(" separator="," close=")">
+            #{complaintId}
+        </foreach>
+    </delete>
+</mapper>

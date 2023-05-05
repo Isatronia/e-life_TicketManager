@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elife.feature.mapper.TicketTypeMapper">
+    
+    <resultMap type="TicketType" id="TicketTypeResult">
+        <result property="typeId"    column="type_id"    />
+        <result property="typeCompany"    column="type_company"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="description"    column="description"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTicketTypeVo">
+        select type_id, type_company, dept_id, type_name, description, create_by, create_time, update_by, update_time from fea_type
+    </sql>
+
+    <select id="selectTicketTypeList" parameterType="TicketType" resultMap="TicketTypeResult">
+        <include refid="selectTicketTypeVo"/>
+        <where>  
+            <if test="typeCompany != null "> and type_company = #{typeCompany}</if>
+            <if test="dept_id != null "> and dept_id = #{deptId}</if>
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="description != null  and description != ''"> and description like concat('%', #{description}, '%')</if>
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectTicketTypeByTypeId" parameterType="Long" resultMap="TicketTypeResult">
+        <include refid="selectTicketTypeVo"/>
+        where type_id = #{typeId}
+    </select>
+        
+    <insert id="insertTicketType" parameterType="TicketType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into fea_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeCompany != null">type_company,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="typeName != null">type_name,</if>
+            <if test="description != null">description,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeCompany != null">#{typeCompany},</if>
+            <if test="dept_id != null">#{deptId},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTicketType" parameterType="TicketType">
+        update fea_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeCompany != null">type_company = #{typeCompany},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteTicketTypeByTypeId" parameterType="Long">
+        delete from fea_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteTicketTypeByTypeIds" parameterType="String">
+        delete from fea_type where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+</mapper>

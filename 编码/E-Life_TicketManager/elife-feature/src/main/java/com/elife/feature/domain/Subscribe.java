@@ -43,6 +43,7 @@ public class Subscribe extends BaseEntity
     {
         return userId;
     }
+
     public void setCompanyId(Long companyId)
     {
         this.companyId = companyId;
