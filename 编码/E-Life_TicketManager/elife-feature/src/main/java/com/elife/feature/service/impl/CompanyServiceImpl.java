@@ -17,13 +17,12 @@ import static com.elife.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 公司管理Service业务层处理
- * 
+ *
  * @author ishgrina
  * @date 2023-04-18
  */
 @Service
-public class CompanyServiceImpl implements ICompanyService 
-{
+public class CompanyServiceImpl implements ICompanyService {
     @Autowired
     private CompanyMapper companyMapper;
 
@@ -32,84 +31,82 @@ public class CompanyServiceImpl implements ICompanyService
 
     /**
      * 查询公司管理
-     * 
+     *
      * @param companyId 公司管理主键
      * @return 公司管理
      */
     @Override
-    public Company selectCompanyByCompanyId(Long companyId)
-    {
+    public Company selectCompanyByCompanyId(Long companyId) {
         return companyMapper.selectCompanyByCompanyId(companyId);
     }
 
     /**
      * 查询公司管理列表
-     * 
+     *
      * @param company 公司管理
      * @return 公司管理
      */
     @Override
 //    @DataScope(deptAlias = "fea_company")
-    public List<Company> selectCompanyList(Company company)
-    {
+    public List<Company> selectCompanyList(Company company) {
         return companyMapper.selectCompanyList(company);
     }
 
     /**
      * 新增公司管理
-     * 
+     *
      * @param company 公司管理
      * @return 结果
      */
     @Override
-    public int insertCompany(Company company)
-    {
+    public int insertCompany(Company company) {
         company.setCreateTime(DateUtils.getNowDate());
         return companyMapper.insertCompany(company);
     }
 
     /**
      * 修改公司信息
-     * 
+     *
      * @param company 公司信息
      * @return 结果
      */
     @Override
-    public int updateCompany(Company company)
-    {
+    public int updateCompany(Company company) {
         company.setUpdateTime(DateUtils.getNowDate());
         return companyMapper.updateCompany(company);
     }
 
     /**
      * 批量删除公司管理
-     * 
+     *
      * @param companyIds 需要删除的公司管理主键
      * @return 结果
      */
     @Override
-    public int deleteCompanyByCompanyIds(Long[] companyIds)
-    {
+    public int deleteCompanyByCompanyIds(Long[] companyIds) {
         return companyMapper.deleteCompanyByCompanyIds(companyIds);
     }
 
     /**
      * 删除公司管理信息
-     * 
+     *
      * @param companyId 公司管理主键
      * @return 结果
      */
     @Override
-    public int deleteCompanyByCompanyId(Long companyId)
-    {
+    public int deleteCompanyByCompanyId(Long companyId) {
         return companyMapper.deleteCompanyByCompanyId(companyId);
     }
 
     @Override
-    @Transactional
     public int companySettlement(Long companyId) {
-
-        return 0;
+        Company company = companyMapper.selectCompanyByCompanyId(companyId);
+        if(company.getStatus() == 0){
+            company.setStatus(1);
+            return  companyMapper.updateCompany(company);
+        }else {
+            return 0;
+        }
     }
 
 }

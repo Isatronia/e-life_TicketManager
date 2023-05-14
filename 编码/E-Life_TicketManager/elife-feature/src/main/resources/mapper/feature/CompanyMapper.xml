@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.elife.feature.mapper.CompanyMapper">
-    
+
     <resultMap type="Company" id="CompanyResult">
-        <result property="companyId"            column="company_id"    />
-        <result property="deptId"               column="dept_id"    />
-        <result property="companyName"          column="company_name"    />
-        <result property="companyAddress"       column="company_address"    />
-        <result property="email"                column="email"    />
-        <result property="foundTime"            column="found_time"    />
-        <result property="certificate"          column="certificate"    />
-        <result property="additionalInfo"       column="additional_info"    />
-        <result property="applyDate"            column="apply_date"    />
-        <result property="companyMaster"        column="company_master"    />
-        <result property="ticketLimit"          column="ticket_limit"    />
-        <result property="status"               column="status"    />
-        <result property="createBy"             column="create_by"    />
-        <result property="createTime"           column="create_time"    />
-        <result property="updateBy"             column="update_by"    />
-        <result property="updateTime"           column="update_time"    />
+        <result property="companyId" column="company_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="companyAddress" column="company_address"/>
+        <result property="email" column="email"/>
+        <result property="foundTime" column="found_time"/>
+        <result property="certificate" column="certificate"/>
+        <result property="additionalInfo" column="additional_info"/>
+        <result property="applyDate" column="apply_date"/>
+        <result property="companyMaster" column="company_master"/>
+        <result property="ticketLimit" column="ticket_limit"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectCompanyVo">
@@ -29,26 +29,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCompanyList" parameterType="Company" resultMap="CompanyResult">
         <include refid="selectCompanyVo"/>
-        <where>  
-            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
-            <if test="companyAddress != null  and companyAddress != ''"> and company_address like concat('%', #{companyAddress}, '%')</if>
-            <if test="email != null  and email != ''"> and email = #{email}</if>
-            <if test="foundTime != null "> and found_time = #{foundTime}</if>
-            <if test="certificate != null  and certificate != ''"> and certificate = #{certificate}</if>
-            <if test="additionalInfo != null  and additionalInfo != ''"> and additional_info = #{additionalInfo}</if>
-            <if test="applyDate != null "> and apply_date = #{applyDate}</if>
-            <if test="companyMaster != null "> and company_master = #{companyMaster}</if>
-            <if test="ticketLimit != null "> and ticket_limit = #{ticketLimit}</if>
-            <if test="status != null "> and status = #{status}</if>
+        <where>
+            <if test="companyName != null  and companyName != ''">and company_name like concat('%', #{companyName},
+                '%')
+            </if>
+            <if test="companyAddress != null  and companyAddress != ''">and company_address like concat('%',
+                #{companyAddress}, '%')
+            </if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="foundTime != null ">and found_time = #{foundTime}</if>
+            <if test="certificate != null  and certificate != ''">and certificate = #{certificate}</if>
+            <if test="additionalInfo != null  and additionalInfo != ''">and additional_info = #{additionalInfo}</if>
+            <if test="applyDate != null ">and apply_date = #{applyDate}</if>
+            <if test="companyMaster != null ">and company_master = #{companyMaster}</if>
+            <if test="ticketLimit != null ">and ticket_limit = #{ticketLimit}</if>
+            <if test="status != null ">and status = #{status}</if>
             ${params.dataScope}
         </where>
     </select>
-    
+
     <select id="selectCompanyByCompanyId" parameterType="Long" resultMap="CompanyResult">
         <include refid="selectCompanyVo"/>
         where company_id = #{companyId}
     </select>
-        
+
     <insert id="insertCompany" parameterType="Company" useGeneratedKeys="true" keyProperty="companyId">
         insert into fea_company
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -66,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="companyName != null and companyName != ''">#{companyName},</if>
             <if test="companyAddress != null">#{companyAddress},</if>
@@ -82,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateCompany" parameterType="Company">
@@ -111,7 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCompanyByCompanyIds" parameterType="String">
-        delete from fea_company where company_id in 
+        delete from fea_company where company_id in
         <foreach item="companyId" collection="array" open="(" separator="," close=")">
             #{companyId}
         </foreach>

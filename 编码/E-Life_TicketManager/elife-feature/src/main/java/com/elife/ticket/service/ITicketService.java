@@ -62,9 +62,8 @@ public interface ITicketService
     /**
      * 申请服务单信息
      *
-     * @param companyId 公司主键
-     * @param ticketTypeId 服务单类型主键
-     * @return 结果
+     *
+     * @param ticket@return 结果
      */
-    public int applyTicket(Long companyId, Long ticketTypeId);
+    public int applyTicket(Ticket ticket);
 }

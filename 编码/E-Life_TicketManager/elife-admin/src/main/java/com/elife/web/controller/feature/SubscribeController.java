@@ -3,6 +3,7 @@ package com.elife.web.controller.feature;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.elife.common.annotation.RepeatSubmit;
 import com.elife.feature.service.ISubscribeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,8 @@ public class SubscribeController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('feature:subscribe:add')")
     @Log(title = "订阅", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/add")
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     public AjaxResult add(@RequestBody Subscribe subscribe) {
         return toAjax(subscribeService.insertSubscribe(subscribe));
     }
@@ -80,11 +82,17 @@ public class SubscribeController extends BaseController {
     /**
      * 删除订阅状态
      */
-    @PreAuthorize("@ss.hasPermi('feature:subscribe:edit')")
+    @PreAuthorize("@ss.hasPermi('feature:subscribe:remove')")
     @Log(title = "订阅", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Subscribe subscribe) {
-        return success;
+        try {
+            return toAjax(subscribeService.forceUnsubscribe(subscribe));
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return error("未发现记录，请刷新重试");
+        }
 //        return toAjax(subscribeService.(subscribe));
     }
 
@@ -111,5 +119,17 @@ public class SubscribeController extends BaseController {
     @PostMapping("/subscribe/{companyId}")
     public AjaxResult subscribe(@PathVariable Long companyId) {
         return toAjax(subscribeService.subscribeByCompanyId(companyId));
+    }
+
+    /**
+     * 同意公司邀请
+     *
+     * @param companyId
+     * @return
+     */
+    @PostMapping("/accept/{companyId}")
+    public AjaxResult accept(@PathVariable Long companyId) {
+        Subscribe params = new Subscribe(getUserId(), companyId);
+        return toAjax(subscribeService.accept(params));
     }
 }

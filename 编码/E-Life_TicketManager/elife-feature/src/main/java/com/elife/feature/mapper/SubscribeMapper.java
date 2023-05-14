@@ -52,14 +52,14 @@ public interface SubscribeMapper
      * @return 结果
      */
     public int updateSubscribe(Subscribe subscribe);
-//
-//    /**
-//     * 删除订阅
-//     *
-//     * @param userId 订阅主键
-//     * @return 结果
-//     */
-//    public int deleteSubscribeByUserId(Long userId);
+
+    /**
+     * 删除订阅
+     *
+     * @param subscribe 订阅信息
+     * @return 结果
+     */
+    public int deleteSubscribe(Subscribe subscribe);
 //
 //    /**
 //     * 批量删除订阅

@@ -1,7 +1,6 @@
 package com.elife.web.controller.ticket;
 
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.elife.common.exception.ServiceException;
@@ -21,14 +20,13 @@ import com.elife.common.core.page.TableDataInfo;
 
 /**
  * 服务单Controller
- * 
+ *
  * @author isghrina
  * @date 2023-04-18
  */
 @RestController
 @RequestMapping("/feature/ticket")
-public class TicketController extends BaseController
-{
+public class TicketController extends BaseController {
     @Autowired
     private ITicketService ticketService;
 
@@ -40,8 +38,7 @@ public class TicketController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('feature:ticket:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Ticket ticket)
-    {
+    public TableDataInfo list(Ticket ticket) {
         startPage();
         List<Ticket> list = ticketService.selectTicketList(ticket);
         return getDataTable(list);
@@ -53,8 +50,7 @@ public class TicketController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:ticket:export')")
     @Log(title = "服务单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Ticket ticket)
-    {
+    public void export(HttpServletResponse response, Ticket ticket) {
         List<Ticket> list = ticketService.selectTicketList(ticket);
         ExcelUtil<Ticket> util = new ExcelUtil<Ticket>(Ticket.class);
         util.exportExcel(response, list, "服务单数据");
@@ -65,8 +61,7 @@ public class TicketController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('feature:ticket:query')")
     @GetMapping(value = "/detail/{ticketId}")
-    public AjaxResult getInfo(@PathVariable("ticketId") Long ticketId)
-    {
+    public AjaxResult getInfo(@PathVariable("ticketId") Long ticketId) {
         return AjaxResult.success(ticketService.selectTicketByTicketId(ticketId));
     }
 
@@ -75,8 +70,7 @@ public class TicketController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('feature:ticket:list')")
     @GetMapping(value = "/parent/{ticketId}")
-    public TableDataInfo listParentTicket(@PathVariable("ticketId") Long ticketId)
-    {
+    public TableDataInfo listChildTicket(@PathVariable("ticketId") Long ticketId) {
         Ticket target = new Ticket();
         target.setParentId(ticketId);
 
@@ -91,8 +85,7 @@ public class TicketController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:ticket:add')")
     @Log(title = "服务单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Ticket ticket)
-    {
+    public AjaxResult add(@RequestBody Ticket ticket) {
         return toAjax(ticketService.insertTicket(ticket));
     }
 
@@ -102,8 +95,7 @@ public class TicketController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:ticket:edit')")
     @Log(title = "服务单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Ticket ticket)
-    {
+    public AjaxResult edit(@RequestBody Ticket ticket) {
         return toAjax(ticketService.updateTicket(ticket));
     }
 
@@ -112,9 +104,8 @@ public class TicketController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('feature:ticket:remove')")
     @Log(title = "服务单", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ticketIds}")
-    public AjaxResult remove(@PathVariable Long[] ticketIds)
-    {
+    @DeleteMapping("/{ticketIds}")
+    public AjaxResult remove(@PathVariable Long[] ticketIds) {
         return toAjax(ticketService.deleteTicketByTicketIds(ticketIds));
     }
 
@@ -124,28 +115,22 @@ public class TicketController extends BaseController
     @PreAuthorize("@ss.hasPermi('feature:ticket:add')")
     @Log(title = "服务单", businessType = BusinessType.INSERT)
     @PostMapping("/apply")
-    public AjaxResult apply(@RequestBody Map<String, String> item)
-    {
-        try{
-            if(!item.containsKey("companyId")){
-                return error("失败，公司ID不存在。 如果持续出现此错误，请联系系统管理员");
-            }
-            Long companyId = Long.parseLong(item.get("companyId"));
-            Long typeId = null;
-            if(item.containsKey("type")){
-                typeId = Long.parseLong(item.get("typeId"));
-            }
-            Company company = companyService.selectCompanyByCompanyId(companyId);
-            return toAjax(ticketService.applyTicket(companyId, typeId));
-        }
-        catch (ServiceException e){
-            e.printStackTrace();
-            return error(e.getMessage());
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return error("出现未知错误，请联系系统管理员");
-        }
+    public AjaxResult apply(@RequestBody Ticket ticket) {
+        return toAjax(ticketService.applyTicket(ticket));
+//        try{
+//            if(null == ticket.getCompanyId()){
+//                return error("失败，公司ID不存在。 如果持续出现此错误，请联系系统管理员");
+//            }
+//            Company company = companyService.selectCompanyByCompanyId(ticket.getCompanyId());
+//        }
+//        catch (ServiceException e){
+//            e.printStackTrace();
+//            return error(e.getMessage());
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            return error("出现未知错误，请联系系统管理员");
+//        }
     }
 
 }

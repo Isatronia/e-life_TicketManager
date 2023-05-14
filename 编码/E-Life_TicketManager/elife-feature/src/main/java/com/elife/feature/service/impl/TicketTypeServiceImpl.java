@@ -20,13 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 问题类型Service业务层处理
- * 
+ *
  * @author ishgrina
  * @date 2023-04-18
  */
 @Service
-public class TicketTypeServiceImpl implements ITicketTypeService 
-{
+public class TicketTypeServiceImpl implements ITicketTypeService {
     @Autowired
     private TicketTypeMapper ticketTypeMapper;
 
@@ -38,43 +37,40 @@ public class TicketTypeServiceImpl implements ITicketTypeService
 
     /**
      * 查询问题类型
-     * 
+     *
      * @param typeId 问题类型主键
      * @return 问题类型
      */
     @Override
-    public TicketType selectTicketTypeByTypeId(Long typeId)
-    {
+    public TicketType selectTicketTypeByTypeId(Long typeId) {
         return ticketTypeMapper.selectTicketTypeByTypeId(typeId);
     }
 
     /**
      * 查询问题类型列表
-     * 
+     *
      * @param ticketType 问题类型
      * @return 问题类型
      */
     @Override
-    public List<TicketType> selectTicketTypeList(TicketType ticketType)
-    {
+    public List<TicketType> selectTicketTypeList(TicketType ticketType) {
         return ticketTypeMapper.selectTicketTypeList(ticketType);
     }
 
     /**
      * 新增问题类型
-     * 
+     *
      * @param ticketType 问题类型
      * @return 结果
      */
     @Override
     @Transactional
-    public int insertTicketType(TicketType ticketType)
-    {
+    public int insertTicketType(TicketType ticketType) {
         // 检测同一公司类型名称唯一
         TicketType temp = new TicketType();
         temp.setTypeName(ticketType.getTypeName());
         temp.setTypeCompany(ticketType.getTypeCompany());
-        if (0 != ticketTypeMapper.selectTicketTypeList(temp).size()){
+        if (0 != ticketTypeMapper.selectTicketTypeList(temp).size()) {
             throw new ServiceException("类型名称不能重复！");
         }
 
@@ -83,56 +79,56 @@ public class TicketTypeServiceImpl implements ITicketTypeService
 
         ticketType.setDeptId(deptId);
         ticketType.setCreateTime(DateUtils.getNowDate());
+
+        SysDept dept = deptMapper.selectDeptById(deptId);
+        dept.setDeptName(ticketType.getTypeName());
+        deptMapper.updateDept(dept);
         return ticketTypeMapper.insertTicketType(ticketType);
     }
 
     /**
      * 修改问题类型
-     * 
+     *
      * @param ticketType 问题类型
      * @return 结果
      */
     @Override
-    public int updateTicketType(TicketType ticketType)
-    {
+    public int updateTicketType(TicketType ticketType) {
         ticketType.setUpdateTime(DateUtils.getNowDate());
         return ticketTypeMapper.updateTicketType(ticketType);
     }
 
     /**
      * 批量删除问题类型
-     * 
+     *
      * @param typeIds 需要删除的问题类型主键
      * @return 结果
      */
     @Override
-    public int deleteTicketTypeByTypeIds(Long[] typeIds)
-    {
+    public int deleteTicketTypeByTypeIds(Long[] typeIds) {
         return ticketTypeMapper.deleteTicketTypeByTypeIds(typeIds);
     }
 
     /**
      * 删除问题类型信息
-     * 
+     *
      * @param typeId 问题类型主键
      * @return 结果
      */
     @Override
-    public int deleteTicketTypeByTypeId(Long typeId)
-    {
+    public int deleteTicketTypeByTypeId(Long typeId) {
         return ticketTypeMapper.deleteTicketTypeByTypeId(typeId);
     }
 
 
-    private Long createTypePermission(Long companyId){
+    private Long createTypePermission(Long companyId) {
         Long targetDeptId;
         // 获取公司的信息
         Company company = companyMapper.selectCompanyByCompanyId(companyId);
         targetDeptId = company.getDeptId();
 
         SysDept tempDept = deptMapper.selectDeptById(company.getDeptId());
-        if (!UserConstants.DEPT_NORMAL.equals(tempDept.getStatus()))
-        {
+        if (!UserConstants.DEPT_NORMAL.equals(tempDept.getStatus())) {
             throw new ServiceException("类型停用，不允许新增");
         }
 

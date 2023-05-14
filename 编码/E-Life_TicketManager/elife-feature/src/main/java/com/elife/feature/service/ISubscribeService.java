@@ -66,4 +66,12 @@ public interface ISubscribeService
      * @return 结果
      */
     public int forceUnsubscribe(Subscribe subscribe);
+
+    /**
+     * 同意公司的邀请
+     *
+     * @param subscribe
+     * @return
+     */
+    public int accept(Subscribe subscribe);
 }

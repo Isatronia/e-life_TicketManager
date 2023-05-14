@@ -42,10 +42,21 @@ public class Subscribe extends BaseEntity {
     private String userName;
 
 
+    public Subscribe(Long userId, Long companyId, int status) {
+        super();
+        this.userId = userId;
+        this.companyId = companyId;
+        this.status = status;
+    }
+
     public Subscribe(Long userId, Long companyId) {
         super();
         this.userId = userId;
         this.companyId = companyId;
+    }
+
+    public Subscribe(){
+        super();
     }
 
     public void setUserId(Long userId) {

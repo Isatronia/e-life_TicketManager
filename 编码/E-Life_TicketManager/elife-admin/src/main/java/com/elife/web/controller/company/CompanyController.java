@@ -85,7 +85,7 @@ public class CompanyController extends BaseController {
     /**
      * 根据公司所有人获取公司信息
      */
-    @PreAuthorize("@ss.hasAnyPermi('feature:company:list')")
+    @PreAuthorize("@ss.hasAnyPermi('feature:company:list,feature:company:detail')")
     @GetMapping(value = "/owner/{userId}")
     public AjaxResult getCompanyByOwner(@PathVariable("userId") Long userId) {
         Company query = new Company();
@@ -139,8 +139,7 @@ public class CompanyController extends BaseController {
     @PreAuthorize("@ss.hasPermi('feature:company:remove')")
     @PostMapping("/settlement/{companyId}")
     public AjaxResult settlement(@PathVariable Long companyId) {
-
-        return success();
+        return toAjax(companyService.companySettlement(companyId));
     }
 
 

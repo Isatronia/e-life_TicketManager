@@ -132,7 +132,9 @@ public class SysUserController extends BaseController {
         AjaxResult ajax = AjaxResult.success();
         SysUser sysUser = userService.selectUserById(userId);
         Map<String, String> res = new HashMap<String, String>();
-
+        if(sysUser == null) {
+            return error("未找到用户");
+        }
         // 返回的数据
 //        res.put("userName", sysUser.getUserName());
         res.put("userId", sysUser.getUserId().toString());

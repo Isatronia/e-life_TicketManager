@@ -42,3 +42,18 @@ export function updateSubscriveStatus(data) {
     method: "put"
   });
 }
+
+export function deleteSubscribe(data){
+  return request({
+    url: "/feature/subscribe/",
+    data: data,
+    method: "delete"
+  })
+}
+
+export function acceptSubscribe(companyId){
+  return request({
+    url: "/feature/subscribe/accept/" + companyId,
+    method: "post"
+  })
+}

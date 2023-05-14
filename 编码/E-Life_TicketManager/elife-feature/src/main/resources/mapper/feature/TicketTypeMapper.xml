@@ -4,42 +4,59 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.elife.feature.mapper.TicketTypeMapper">
 
-    <resultMap type="TicketType"        id="TicketTypeResult">
-        <result property="typeId"       column="type_id"/>
-        <result property="typeCompany"  column="type_company"/>
-        <result property="deptId"       column="dept_id"/>
-        <result property="typeName"     column="type_name"/>
-        <result property="description"  column="description"/>
-        <result property="createBy"     column="create_by"/>
-        <result property="createTime"   column="create_time"/>
-        <result property="updateBy"     column="update_by"/>
-        <result property="updateTime"   column="update_time"/>
+    <resultMap type="TicketType" id="TicketTypeResult">
+        <result property="typeId" column="type_id"/>
+        <result property="typeCompany" column="type_company"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="description" column="description"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectTicketTypeVo">
-        select type_id, type_company, dept_id, type_name, description, create_by, create_time, update_by, update_time
-        from fea_type
+        SELECT
+          type_id,
+          type_company,
+          dept_id,
+          type_name,
+          description,
+          create_by,
+          create_time,
+          update_by,
+          update_time
+        FROM
+          fea_type
     </sql>
 
-    <select id="selectTicketTypeList" parameterType="TicketType" resultMap="TicketTypeResult">
+    <select id="selectTicketTypeList" parameterType="TicketType"
+            resultMap="TicketTypeResult">
         <include refid="selectTicketTypeVo"/>
         <where>
-            <if test="typeCompany != null ">and type_company = #{typeCompany}</if>
+            <if test="typeCompany != null ">and type_company = #{typeCompany}
+            </if>
             <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="typeName != null  and typeName != ''">and type_name like concat('%', #{typeName}, '%')</if>
-            <if test="description != null  and description != ''">and description like concat('%', #{description},
+            <if test="typeName != null  and typeName != ''">and type_name like
+                concat('%', #{typeName}, '%')
+            </if>
+            <if test="description != null  and description != ''">and
+                description like concat('%', #{description},
                 '%')
             </if>
             ${params.dataScope}
         </where>
     </select>
 
-    <select id="selectTicketTypeByTypeId" parameterType="Long" resultMap="TicketTypeResult">
+    <select id="selectTicketTypeByTypeId" parameterType="Long"
+            resultMap="TicketTypeResult">
         <include refid="selectTicketTypeVo"/>
         where type_id = #{typeId}
     </select>
 
-    <insert id="insertTicketType" parameterType="TicketType" useGeneratedKeys="true" keyProperty="typeId">
+    <insert id="insertTicketType" parameterType="TicketType"
+            useGeneratedKeys="true" keyProperty="typeId">
         insert into fea_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="typeCompany != null">type_company,</if>
@@ -84,7 +101,8 @@
 
     <delete id="deleteTicketTypeByTypeIds" parameterType="String">
         delete from fea_type where type_id in
-        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+        <foreach item="typeId" collection="array" open="(" separator=","
+                 close=")">
             #{typeId}
         </foreach>
     </delete>
