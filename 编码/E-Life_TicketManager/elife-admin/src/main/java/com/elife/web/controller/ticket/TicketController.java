@@ -112,7 +112,7 @@ public class TicketController extends BaseController {
     /**
      * 申请服务单
      */
-    @PreAuthorize("@ss.hasPermi('feature:ticket:add')")
+    @PreAuthorize("@ss.hasPermi('feature:ticket:apply')")
     @Log(title = "服务单", businessType = BusinessType.INSERT)
     @PostMapping("/apply")
     public AjaxResult apply(@RequestBody Ticket ticket) {
