@@ -123,10 +123,10 @@ export default {
       this.fetchMessage();
       this.msgts = newStamp;
     },
-    refresh(o, n){
+    refresh(o, n) {
       this.fetchMessage();
-      this.refresh=false;
-    }
+      this.refresh = false;
+    },
   },
   created() {
     // 根据待拉取的消息类型设置拉取方法
