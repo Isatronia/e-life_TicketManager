@@ -2,7 +2,7 @@
   <div class="ticket-message-container">
     <div v-if="this.messageList">
       <div v-for="(msg, index) in messageList" :key="index">
-        <message :message="msg" :updateRequest="refresh"></message>
+        <message :message="msg" @refresh="refresh"></message>
       </div>
     </div>
     <div v-else>
@@ -41,7 +41,6 @@ export default {
         }
       },
       toLast: 1,
-      refresh: false,
     };
   },
   methods: {
@@ -96,6 +95,14 @@ export default {
         this.toLastOnce();
       });
     },
+    refresh() {
+      this.messageList = [];
+      new Promise(() => {
+        this.fetchMessage();
+      }).then(() => {
+        this.scrollToBottom();
+      });
+    },
     // 从服务器拉取信息列表
     fetchMessage() {
       // 判断是否第一次初始化，没设置就不拉取
@@ -120,12 +127,12 @@ export default {
     },
     timestamp(oldStamp, newStamp) {
       console.log("Sychorizing Message List...");
-      this.fetchMessage();
+      new Promise(() => {
+        this.fetchMessage();
+      }).then(() => {
+        this.scrollToBottom();
+      });
       this.msgts = newStamp;
-    },
-    refresh(o, n) {
-      this.fetchMessage();
-      this.refresh = false;
     },
   },
   created() {

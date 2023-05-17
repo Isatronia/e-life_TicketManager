@@ -37,19 +37,10 @@
         <el-row>
           <complaint :companyId="this.detail.companyId"></complaint>
         </el-row>
-        <el-row
-          :v-if="this.detail.createby == this.username || checkRole(['admin'])"
-          style="
-             {
-              margin-top: 4vh;
-            }
-          "
-        >
-          <div>
-            <company-info-edit
-              :companyId="this.detail.companyId"
-            ></company-info-edit>
-          </div>
+        <el-row>
+          <el-card class="box-card">
+            <div slot="header">公司信息</div>
+          </el-card>
         </el-row>
       </el-main>
     </el-container>
@@ -60,6 +51,7 @@
       :visible.sync="drawer"
       :wrapperClosable="true"
       size="66%"
+      append-to-body
     >
       <apply-ticket-form :companyId="detail.companyId" />
     </el-drawer>

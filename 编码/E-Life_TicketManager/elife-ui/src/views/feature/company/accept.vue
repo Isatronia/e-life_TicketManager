@@ -18,18 +18,17 @@ export default {
   methods: {
     accept() {
       console.log("Accepted!!!!");
-      return;
       acceptSubscribe(this.companyId).then(
         (response) => {
-        //   this.jump();
+          this.jump();
         },
         (reject) => {
-        //   this.jump();
+          this.jump();
         }
       );
     },
     jump() {
-      this.$route.push("/ticket/company-detail/" + this.companyId);
+      this.$router.push("/ticket/company-detail/" + this.companyId);
     },
   },
   created() {

@@ -8,27 +8,30 @@
           @node-click="handleNodeClick"
         >
           <div class="custom-tree-node" slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
-            <span class="push-right">
-              <i
-                class="el-icon-setting"
-                @click="handleEditTicket(data.ticketId)"
-              >
-              </i>
-            </span>
+            <el-row :gutter="0">
+              <el-col :span="20">
+                <span class="node-ticket-title">{{ node.label }}</span>
+              </el-col>
+              <el-col :span="1">
+                <span class="node-ticket-config">
+                  <i class="el-icon-setting" @click="handleEditTicket(data)">
+                  </i>
+                </span>
+              </el-col>
+            </el-row>
           </div>
         </el-tree>
       </el-aside>
       <el-container>
         <el-header class="ticket-header-container">
           <div class="ticket-header">
-            {{ formatTitle(currentTicket) }}
+            {{ formatTitle }}
           </div></el-header
         >
         <div class="sns-panel">
           <el-main ref="ticketPanel">
             <message-container
-              :ticketId="ticketId"
+              :ticketId="curTicketId"
               :messageType="0"
               :timestamp="ticketMessageTimeStamp"
             />
@@ -58,7 +61,7 @@
     </el-container>
 
     <el-drawer label="rtl" :visible.sync="editTicket">
-      <ticket-edit-form :ticket="currentTicket" />
+      <ticket-edit-form :ticket="curTicketId" @refresh="fetchTicketList" />
     </el-drawer>
   </div>
 </template>
@@ -75,7 +78,6 @@ export default {
   },
   data() {
     return {
-      ticketId: undefined,
       currentTicket: undefined,
       editTicket: false,
       ticketList: [],
@@ -91,7 +93,7 @@ export default {
     handleSendMessage() {
       let user = this.$store.state.userId;
       let message = {
-        messageTicket: this.ticketId,
+        messageTicket: this.currentTicket.ticketId,
         author: user,
         quote: undefined,
         mention: undefined,
@@ -103,25 +105,44 @@ export default {
         this.ticketMessageTimeStamp++;
       });
     },
+    updateCurrentTicketInf() {
+      this.currentTicket = this.ticketList.find((item) => {
+        return item.ticketId == this.curTicketId;
+      });
+    },
+    refresh() {
+      this.fetchTicketList();
+    },
     fetchTicketList() {
       listTicket({}).then((response) => {
-        console.log(response);
         this.ticketList = response.rows;
+        this.updateCurrentTicketInf();
       });
     },
     handleNodeClick(data) {
       this.currentTicket = data;
-      this.ticketId = data.ticketId;
     },
-    handleEditTicket(id) {
-      console.log(id);
+    handleEditTicket(data) {
+      this.currentTicket = data;
       this.editTicket = true;
     },
-    formatTitle(ticket) {
-      console.log("logging current ticket...");
-      console.log(ticket);
-      if (ticket) {
-        return "Ticket " + ticket.ticketId + "\t" + ticket.ticketTitle;
+  },
+  computed: {
+    curTicketId() {
+      if (this.currentTicket) {
+        return this.currentTicket.ticketId;
+      } else {
+        return undefined;
+      }
+    },
+    formatTitle() {
+      if (this.currentTicket) {
+        return (
+          "Ticket " +
+          this.currentTicket.ticketId +
+          "\t" +
+          this.currentTicket.ticketTitle
+        );
       } else {
         return "从右侧选择一个服务单以开始...";
       }
@@ -140,7 +161,14 @@ export default {
 }
 .custom-tree-node {
   display: flex;
-  justify-content: space-between;
+  width: 100%;
+  .node-ticket-title{
+    justify-content: left;
+
+  }
+  .node-ticket-config{
+    justify-content: right;
+  }
 }
 .ticket-header {
   align-self: center;

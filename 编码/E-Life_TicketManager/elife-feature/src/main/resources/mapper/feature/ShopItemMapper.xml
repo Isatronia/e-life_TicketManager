@@ -38,6 +38,16 @@
         where record_id = #{recordId}
     </select>
 
+    <select id="selectShopItemByUserId" parameterType="Long" resultMap="ShopItemResult">
+        <include refid="selectShopItemVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectShopItemByCompanyId" parameterType="Long" resultMap="ShopItemResult">
+        <include refid="selectShopItemVo"/>
+        where company_id = #{companyId}
+    </select>
+
     <insert id="insertShopItem" parameterType="ShopItem" useGeneratedKeys="true" keyProperty="recordId">
         insert into fea_item
         <trim prefix="(" suffix=")" suffixOverrides=",">

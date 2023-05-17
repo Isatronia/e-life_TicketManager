@@ -8,6 +8,8 @@ import com.elife.common.annotation.Excel;
 import com.elife.common.annotation.Excel.ColumnType;
 import com.elife.common.core.domain.BaseEntity;
 
+import java.util.Objects;
+
 /**
  * 角色表 sys_role
  * 
@@ -203,7 +205,15 @@ public class SysRole extends BaseEntity
     {
         this.deptIds = deptIds;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SysRole sysRole = (SysRole) o;
+        return Objects.equals(roleId, sysRole.roleId);
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

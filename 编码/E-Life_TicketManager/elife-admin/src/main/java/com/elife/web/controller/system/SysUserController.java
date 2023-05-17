@@ -107,7 +107,8 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
 //    @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping(value = {"/detail/", "/{userId}"})
+//    @GetMapping(value = {"/detail/", "{userId}"})
+    @GetMapping(value = "/detail/{userId}")
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         userService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();

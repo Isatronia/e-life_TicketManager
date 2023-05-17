@@ -2,7 +2,8 @@
   <div class="message-panel">
     <el-row :gutter="3" class="message-info">
       <el-col :span="1">
-        <img :src="message.author.avatar" class="img-circle img-sm" />
+        <el-image :src="message.author.avatar" class="img-circle img-sm" >
+        </el-image>
       </el-col>
       <el-col :span="18">
         <el-row :gutter="4">
@@ -26,8 +27,8 @@
 
 <script>
 import { marked } from "marked";
-import { getUser, getUserBasicInfo } from "@/api/system/user";
-import { delMessage } from "@/api/monitor/message";
+import { getUserBasicInfo } from "@/api/system/user";
+import { safeDelMessage } from "@/api/monitor/message";
 
 // JUST FOR TEST
 import store from "@/store";
@@ -96,16 +97,21 @@ export default {
       }
     },
     delThisMessage() {
-      this.$modal.confirm("是否确认删除该条消息?").then();
-      delMessage(this.message.messageId)
-        .then((response) => {
-          return delMessage(this.message);
+      this.$modal
+        .confirm("是否确认删除该条消息?")
+        .then( () => {
+          return safeDelMessage(this.message.messageId);
+        },
+        () => {
+          console.log("rejected")
         })
         .then(() => {
-          this.updateRequest = true;
+          this.$emit("refresh");
+          this.$modal.msgSuccess("删除成功");
         });
+
     },
-    checkDeleteAble(){
+    checkDeleteAble() {
       if (null == this.message || null == this.message.author) {
         return;
       }
@@ -122,7 +128,7 @@ export default {
       }
       this.deleteAble = false;
       return;
-    }
+    },
   },
   watch: {
     message(oldMessage, newMessage) {

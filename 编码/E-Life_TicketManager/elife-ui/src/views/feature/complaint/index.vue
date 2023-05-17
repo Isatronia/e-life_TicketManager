@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      size="small"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="投诉用户" prop="complaintUser">
         <el-input
           v-model="queryParams.complaintUser"
@@ -18,8 +25,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -32,7 +47,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['feature:complaint:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -43,7 +59,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['feature:complaint:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,7 +71,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['feature:complaint:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -64,18 +82,42 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['feature:complaint:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="complaintList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="complaintList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="投诉ID" align="center" prop="complaintId" />
       <el-table-column label="投诉用户" align="center" prop="complaintUser" />
       <el-table-column label="投诉目标" align="center" prop="complaintTarget" />
-      <el-table-column label="投诉内容" align="center" prop="content" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="部门编号" align="center" prop="deptId" v-if="checkRole(['admin'])"/>
+      <el-table-column label="投诉内容" align="center" prop="content" >
+        <template slot-scope="scope">
+          <el-button
+          size="mini"
+              type="primary"
+              icon="el-icon-s-marketing"
+              plain
+              @click="handleShowDetail(scope.row)"
+          ></el-button>
+
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -83,20 +125,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['feature:complaint:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['feature:complaint:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -104,30 +148,54 @@
     />
 
     <!-- 添加或修改投诉对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-drawer
+      direction="rtl"
+      :title="title"
+      :visible.sync="open"
+      size="66%"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="投诉用户" prop="complaintUser">
           <el-input v-model="form.complaintUser" placeholder="请输入投诉用户" />
         </el-form-item>
         <el-form-item label="投诉目标" prop="complaintTarget">
-          <el-input v-model="form.complaintTarget" placeholder="请输入投诉目标" />
+          <el-input
+            v-model="form.complaintTarget"
+            placeholder="请输入投诉目标"
+          />
+        </el-form-item>
+        <el-form-item label="部门编号" prop="deptId" v-if="checkRole(['admin'])">
+          <el-input v-model="form.deptId" placeholder="请输入部门编号" />
         </el-form-item>
         <el-form-item label="投诉内容">
-          <editor v-model="form.content" :min-height="192"/>
+          <editor v-model="form.content" :min-height="192" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-drawer>
+
+    <el-drawer direction="rtl" :visible.sync="detail" size="66%" append-to-body>
+      <div v-html="form.content ? form.content : ''"></div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import { listComplaint, getComplaint, delComplaint, addComplaint, updateComplaint } from "@/api/feature/complaint";
+import { checkPermi, checkRole } from "@/utils/permission";
+import {
+  listComplaint,
+  getComplaint,
+  delComplaint,
+  addComplaint,
+  updateComplaint,
+} from "@/api/feature/complaint";
 
 export default {
+  
   name: "Complaint",
   data() {
     return {
@@ -160,18 +228,20 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
+      // 显示详情
+      detail: false,
     };
   },
   created() {
     this.getList();
   },
   methods: {
+    checkRole,
     /** 查询投诉列表 */
     getList() {
       this.loading = true;
-      listComplaint(this.queryParams).then(response => {
+      listComplaint(this.queryParams).then((response) => {
         this.complaintList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -188,11 +258,12 @@ export default {
         complaintId: null,
         complaintUser: null,
         complaintTarget: null,
+        deptId: null,
         content: null,
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
       };
       this.resetForm("form");
     },
@@ -208,9 +279,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.complaintId)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.complaintId);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -221,8 +292,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const complaintId = row.complaintId || this.ids
-      getComplaint(complaintId).then(response => {
+      const complaintId = row.complaintId || this.ids;
+      getComplaint(complaintId).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改投诉";
@@ -230,16 +301,16 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.complaintId != null) {
-            updateComplaint(this.form).then(response => {
+            updateComplaint(this.form).then((response) => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addComplaint(this.form).then(response => {
+            addComplaint(this.form).then((response) => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -251,19 +322,36 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const complaintIds = row.complaintId || this.ids;
-      this.$modal.confirm('是否确认删除投诉编号为"' + complaintIds + '"的数据项？').then(function() {
-        return delComplaint(complaintIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      this.$modal
+        .confirm('是否确认删除投诉编号为"' + complaintIds + '"的数据项？')
+        .then(function () {
+          return delComplaint(complaintIds);
+        })
+        .then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        })
+        .catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('feature/complaint/export', {
-        ...this.queryParams
-      }, `complaint_${new Date().getTime()}.xlsx`)
-    }
-  }
+      this.download(
+        "feature/complaint/export",
+        {
+          ...this.queryParams,
+        },
+        `complaint_${new Date().getTime()}.xlsx`
+      );
+    },
+    handleShowDetail(row){
+      console.log(row);
+      this.reset();
+      const complaintId = row.complaintId;
+      getComplaint(complaintId).then((response) => {
+        this.form = response.data;
+        this.detail = true;
+      });
+    },
+  },
 };
 </script>

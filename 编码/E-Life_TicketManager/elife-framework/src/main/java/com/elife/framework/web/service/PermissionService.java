@@ -162,6 +162,13 @@ public class PermissionService
     {
         System.out.println("[DEBUG] Login User Permission set is :　" + permissions.toString());
         System.out.println("[DEBUG] Required permission is: " + permission);
-        return permissions.contains(ALL_PERMISSION) || permissions.contains(StringUtils.trim(permission));
+        boolean res =  permissions.contains(ALL_PERMISSION) || permissions.contains(StringUtils.trim(permission));
+        if (res) {
+            System.out.println("[DEBUG] Action Permitted");
+        }
+        else{
+            System.out.println("[DEBUG] Access Denied");
+        }
+        return res;
     }
 }

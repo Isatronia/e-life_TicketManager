@@ -20,6 +20,22 @@ public interface ShopItemMapper
     public ShopItem selectShopItemByRecordId(Long recordId);
 
     /**
+     * 查询商品信息
+     *
+     * @param userId 用户编号
+     * @return 商品信息
+     */
+    public ShopItem selectShopItemByUserId(Long userId);
+
+    /**
+     * 查询商品信息
+     *
+     * @param companyId 用户编号
+     * @return 商品信息
+     */
+    public ShopItem selectShopItemByCompanyId(Long companyId);
+
+    /**
      * 查询商品信息列表
      *
      * @param shopItem 商品信息

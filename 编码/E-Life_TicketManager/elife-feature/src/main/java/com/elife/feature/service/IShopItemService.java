@@ -20,6 +20,22 @@ public interface IShopItemService
     public ShopItem selectShopItemByRecordId(Long recordId);
 
     /**
+     * 查询商品信息
+     *
+     * @param userId 用户编号
+     * @return 商品信息
+     */
+    public List<ShopItem> selectShopItemByUserId(Long userId);
+
+    /**
+     * 查询商品信息
+     *
+     * @param companyId 公司编号
+     * @return 商品信息
+     */
+    public List<ShopItem> selectShopItemByCompanyId(Long companyId);
+
+    /**
      * 查询商品信息列表
      *
      * @param shopItem 商品信息

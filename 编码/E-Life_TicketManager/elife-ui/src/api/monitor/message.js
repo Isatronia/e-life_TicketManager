@@ -63,7 +63,15 @@ export function updateMessage(data) {
 // 删除消息查询
 export function delMessage(messageId) {
   return request({
-    url: "/monitor/message/" + messageId,
+    url: "/monitor/message/force-del/" + messageId,
+    method: "delete",
+  });
+}
+
+// 删除消息查询
+export function safeDelMessage(messageId) {
+  return request({
+    url: "/monitor/message/safe-del/" + messageId,
     method: "delete",
   });
 }

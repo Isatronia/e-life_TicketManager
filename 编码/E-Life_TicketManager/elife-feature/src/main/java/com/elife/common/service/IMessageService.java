@@ -74,4 +74,21 @@ public interface IMessageService
      * @return 结果
      */
     public int deleteMessageByMessageId(Long messageId);
+
+    /**
+     * 批量删除消息查询
+     *
+     * @param messageIds 需要删除的消息查询主键集合
+     * @return 结果
+     */
+    public int safeDeleteMessageByMessageIds(Long[] messageIds);
+
+    /**
+     * 删除消息查询信息
+     *
+     * @param messageId 消息查询主键
+     * @return 结果
+     */
+    public int safeDeleteMessageByMessageId(Long messageId);
+
 }

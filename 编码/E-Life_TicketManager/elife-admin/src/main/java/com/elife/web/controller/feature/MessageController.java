@@ -125,10 +125,20 @@ public class MessageController extends BaseController {
     /**
      * 删除消息查询
      */
-    @PreAuthorize("@ss.hasPermi('monitor:message:remove')")
+    @PreAuthorize("@ss.hasPermi('monitor:message:force-remove')")
     @Log(title = "消息查询", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{messageIds}")
+    @DeleteMapping("/force-del/{messageIds}")
     public AjaxResult remove(@PathVariable Long[] messageIds) {
         return toAjax(messageService.deleteMessageByMessageIds(messageIds));
+    }
+
+    /**
+     * 删除消息查询
+     */
+    @PreAuthorize("@ss.hasPermi('monitor:message:safe-remove')")
+    @Log(title = "消息查询", businessType = BusinessType.DELETE)
+    @DeleteMapping("/safe-del/{messageId}")
+    public AjaxResult safeRemove(@PathVariable Long messageId) {
+        return toAjax(messageService.deleteMessageByMessageId(messageId));
     }
 }

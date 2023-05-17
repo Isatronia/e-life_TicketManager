@@ -1,4 +1,4 @@
-package com.elife.feature.controller;
+package com.elife.web.controller.feature;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +47,18 @@ public class ShopItemController extends BaseController
     }
 
     /**
+     * 查询商品信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('feature:shopItem:list')")
+    @GetMapping("/list-self")
+    public TableDataInfo listSelf()
+    {
+        startPage();
+        List<ShopItem> list = shopItemService.selectShopItemByUserId(getLoginUser().getUserId());
+        return getDataTable(list);
+    }
+
+    /**
      * 导出商品信息列表
      */
     @PreAuthorize("@ss.hasPermi('feature:shopItem:export')")
@@ -63,7 +75,7 @@ public class ShopItemController extends BaseController
      * 获取商品信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('feature:shopItem:query')")
-    @GetMapping(value = "/{recordId}")
+    @GetMapping(value = "/detail/{recordId}")
     public AjaxResult getInfo(@PathVariable("recordId") Long recordId)
     {
         return AjaxResult.success(shopItemService.selectShopItemByRecordId(recordId));

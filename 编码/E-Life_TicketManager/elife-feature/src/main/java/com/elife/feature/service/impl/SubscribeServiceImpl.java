@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.elife.common.core.domain.entity.SysDept;
+import com.elife.common.core.domain.entity.SysRole;
 import com.elife.common.core.domain.entity.SysUser;
 import com.elife.common.domain.Message;
 import com.elife.common.exception.ServiceException;
@@ -16,8 +17,11 @@ import com.elife.feature.domain.Company;
 import com.elife.feature.mapper.BlockMapper;
 import com.elife.feature.mapper.CompanyMapper;
 import com.elife.system.domain.SysConfig;
+import com.elife.system.domain.SysUserRole;
 import com.elife.system.mapper.SysDeptMapper;
+import com.elife.system.mapper.SysRoleMapper;
 import com.elife.system.mapper.SysUserMapper;
+import com.elife.system.mapper.SysUserRoleMapper;
 import com.elife.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +51,12 @@ public class SubscribeServiceImpl implements ISubscribeService {
 
     @Autowired
     private SysUserMapper userMapper;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -190,9 +200,9 @@ public class SubscribeServiceImpl implements ISubscribeService {
     private int grantCompanyRole(Subscribe subscribe) {
         // 校验是否已经获取员工角色，已有则不进行任何操作，返回并报错
         SysUser targetUser = userMapper.selectUserById(subscribe.getUserId());
-        List<Long> targetUserRoleIds = Arrays.asList(targetUser.getRoleIds());
-        Long employeeRole = Long.parseLong(getConfig("system.role.employee"));
-        if (targetUserRoleIds.contains(employeeRole)) {
+        SysRole employeeRole = roleMapper.selectRoleById(Long.parseLong(getConfig("system.role.employee")));
+
+        if (targetUser.getRoles().contains(employeeRole)) {
             throw new ServiceException("用户已是员工，添加失败");
         }
 
@@ -200,13 +210,19 @@ public class SubscribeServiceImpl implements ISubscribeService {
         Company company = companyMapper.selectCompanyByCompanyId(subscribe.getCompanyId());
 
         // 更改用户所属部门
-        targetUser.setDept(deptMapper.selectDeptById(company.getDeptId()));
-        // 给用户赋予角色
-        targetUser.setRoleId(employeeRole);
-        targetUser.setRoleIds(new Long[]{employeeRole});
-
+        targetUser.setDeptId(company.getDeptId());
+//        targetUser.setDept(deptMapper.selectDeptById(company.getDeptId()));
         userMapper.updateUser(targetUser);
-        return 0;
+
+        // 更新用户角色
+        SysUserRole userRole = new SysUserRole();
+        userRole.setRoleId(employeeRole.getRoleId());
+        userRole.setUserId(targetUser.getUserId());
+        List<SysUserRole> roles = new ArrayList<SysUserRole>(Arrays.asList(new SysUserRole[]{userRole}));
+
+        userRoleMapper.deleteUserRoleByUserId(targetUser.getUserId());
+        userRoleMapper.batchUserRole(roles);
+        return 1;
     }
 
     /**
