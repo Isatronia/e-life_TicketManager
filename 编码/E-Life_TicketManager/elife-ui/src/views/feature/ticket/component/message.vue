@@ -11,14 +11,20 @@
             {{ message.author.nickName }}
             {{ message.createTime }}
           </el-col>
-          <el-col v-if="deleteAble" :span="2">
-            <el-button
-              type="danger"
-              @click="delThisMessage"
-              icon="el-icon-delete"
+          <el-col v-if="deleteAble" :span="4">
+            <el-button-group>
+              <el-button type="info"
+              @click="editThisMessage"
+              icon="el-icon-edit"
               size="mini"
-            >
-            </el-button>
+              />
+              <el-button
+                type="info"
+                @click="delThisMessage"
+                icon="el-icon-delete"
+                size="mini"
+              />
+            </el-button-group>
           </el-col>
         </el-row>
         <el-row>
@@ -134,6 +140,9 @@ export default {
       this.deleteAble = false;
       return;
     },
+    editThisMessage(){
+      console.log("Edit message!");
+    }
   },
   watch: {
     message(oldMessage, newMessage) {
