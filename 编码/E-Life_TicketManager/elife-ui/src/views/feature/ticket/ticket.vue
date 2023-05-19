@@ -61,6 +61,7 @@
     </el-container>
 
     <el-drawer label="rtl" :visible.sync="editTicket">
+      <ticket-status-transform :ticketId="curTicketId"></ticket-status-transform>
       <ticket-edit-form :ticket="curTicketId" @refresh="fetchTicketList" />
     </el-drawer>
   </div>
@@ -71,10 +72,12 @@ import MessageContainer from "./component/messageContainer.vue";
 import { sendMessage } from "@/api/monitor/message";
 import { listTicket } from "@/api/feature/ticket";
 import ticketEditForm from "./component/ticketEditForm.vue";
+import ticketStatusTransform from "./component/ticketStatusTransform.vue";
 export default {
   components: {
     "message-container": MessageContainer,
     ticketEditForm,
+    ticketStatusTransform,
   },
   data() {
     return {

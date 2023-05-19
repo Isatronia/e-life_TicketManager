@@ -58,6 +58,11 @@ export default {
       });
     },
   },
+  watch:{
+    ticket(oldTicket, newTicket){
+      this.reset();
+    }
+  },
   mounted() {
     this.reset();
   },

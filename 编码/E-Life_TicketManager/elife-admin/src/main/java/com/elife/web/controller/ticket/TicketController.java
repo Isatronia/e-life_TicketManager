@@ -45,6 +45,17 @@ public class TicketController extends BaseController {
     }
 
     /**
+     * 查询服务单列表
+     */
+    @PreAuthorize("@ss.hasPermi('feature:ticket:list')")
+    @GetMapping("/list-company")
+    public TableDataInfo listByCompany(Ticket ticket) {
+        startPage();
+        List<Ticket> list = ticketService.selectCompanyTicketList(ticket);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出服务单列表
      */
     @PreAuthorize("@ss.hasPermi('feature:ticket:export')")

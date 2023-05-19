@@ -2,7 +2,7 @@
   <div class="message-panel">
     <el-row :gutter="3" class="message-info">
       <el-col :span="1">
-        <el-image :src="message.author.avatar" class="img-circle img-sm" >
+        <el-image :src="message.author.avatar" class="img-circle img-sm">
         </el-image>
       </el-col>
       <el-col :span="18">
@@ -12,8 +12,12 @@
             {{ message.createTime }}
           </el-col>
           <el-col v-if="deleteAble" :span="2">
-            <el-button type="danger" @click="delThisMessage">
-              删除消息
+            <el-button
+              type="danger"
+              @click="delThisMessage"
+              icon="el-icon-delete"
+              size="mini"
+            >
             </el-button>
           </el-col>
         </el-row>
@@ -99,17 +103,18 @@ export default {
     delThisMessage() {
       this.$modal
         .confirm("是否确认删除该条消息?")
-        .then( () => {
-          return safeDelMessage(this.message.messageId);
-        },
-        () => {
-          console.log("rejected")
-        })
+        .then(
+          () => {
+            return safeDelMessage(this.message.messageId);
+          },
+          () => {
+            console.log("rejected");
+          }
+        )
         .then(() => {
           this.$emit("refresh");
           this.$modal.msgSuccess("删除成功");
         });
-
     },
     checkDeleteAble() {
       if (null == this.message || null == this.message.author) {

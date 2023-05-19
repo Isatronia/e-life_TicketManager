@@ -28,6 +28,14 @@ public interface ITicketService
     public List<Ticket> selectTicketList(Ticket ticket);
 
     /**
+     * 查询公司服务单列表
+     *
+     * @param ticket 服务单
+     * @return 结果
+     */
+    public List<Ticket> selectCompanyTicketList(Ticket ticket);
+
+    /**
      * 新增服务单
      * 
      * @param ticket 服务单

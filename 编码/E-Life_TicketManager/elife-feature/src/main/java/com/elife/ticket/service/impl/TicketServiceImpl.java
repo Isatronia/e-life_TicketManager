@@ -1,5 +1,6 @@
 package com.elife.ticket.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.elife.common.annotation.DataScope;
@@ -62,6 +63,22 @@ public class TicketServiceImpl implements ITicketService {
     @DataScope(deptAlias = "fea_ticket", userAlias = "fea_ticket")
     public List<Ticket> selectTicketList(Ticket ticket) {
         return ticketMapper.selectTicketList(ticket);
+    }
+
+    /**
+     * 查询公司服务单列表
+     *
+     * @param ticket 服务单
+     * @return 结果
+     */
+    @Override
+    public List<Ticket> selectCompanyTicketList(Ticket ticket) {
+        if(null == ticket.getCompanyId()){
+            return new ArrayList<Ticket>();
+        }
+        Ticket params = new Ticket();
+        params.setCompanyId(ticket.getCompanyId());
+        return ticketMapper.selectTicketList(params);
     }
 
     /**
@@ -147,7 +164,9 @@ public class TicketServiceImpl implements ITicketService {
         }
         return true;
     }
-
+    private Long getDeptIdByTicketTypeId(Long typeId){
+        return ticketTypeMapper.selectTicketTypeByTypeId(typeId).getDeptId();
+    }
 //    private Long createTicketPermission(Long companyId, Long typeId) {
 //        Long targetDeptId;
 //        // 获取公司的部门ID以及名称，默认是
